@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { Employee } from './interfaces/employee.interface';
+import { EmployeesService } from './services/employees.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +13,9 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'prueba-users-app';
+  employeeService = inject(EmployeesService);
+
+  constructor(){
+    this.employeeService.loadEmployees();
+  }
 }

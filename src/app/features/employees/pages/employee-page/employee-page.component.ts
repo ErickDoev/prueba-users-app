@@ -17,4 +17,3 @@ import { TitleComponent } from '../../../../shared/title/title.component';
 })
 export class EmployeePageComponent { }
 
-// export default EmployeePageComponent;

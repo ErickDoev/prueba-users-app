@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { Catalog } from '../interfaces/catalogs.interface';
 import { Employee } from '../interfaces/employee.interface';
 import { v4 as uuid } from 'uuid';
+import { EmployeesResponse } from '../interfaces/employees-response.interface';
 
 const CATALOGS: Catalog[] = [
   {
@@ -19,33 +20,6 @@ const CATALOGS: Catalog[] = [
   }
 ];
 
-const EMPLOYEES: Employee[] = [
-  {
-    id: uuid(),
-    nombre: 'Erick Cruz Padilla',
-    fechaNacimiento: new Date().getTime(),
-    edad: 26,
-    estatus: true,
-    idCargo: 1
-  },
-  {
-    id: uuid(),
-    nombre: 'Paloma Cruz Padilla',
-    fechaNacimiento: new Date().getTime(),
-    edad: 22,
-    estatus: true,
-    idCargo: 1
-  },
-  {
-    id: uuid(),
-    nombre: 'Yeray Cruz Padilla',
-    fechaNacimiento: new Date().getTime(),
-    edad: 18,
-    estatus: true,
-    idCargo: 2
-  },
-];
-
 @Injectable({
   providedIn: 'root'
 })
@@ -53,24 +27,71 @@ export class EmployeesService {
 
   constructor() { }
 
-  private employees: Employee[] = EMPLOYEES;
+  private employees: Employee[] = [];
+
+  loadEmployees(){
+    this.employees = JSON.parse(localStorage.getItem('employess') || '[]');
+  }
 
   getCatalogs(): Observable<Catalog[]>{
     return of(CATALOGS);
   }
 
   addEmployee(employe: Employee):Observable<boolean>{
-    console.log({employe});
     const employeeWithId = {
       ...employe,
       id: uuid()
     }
     this.employees.push(employeeWithId);
+    localStorage.setItem('employess', JSON.stringify(this.getAllEmmployees()));
     return of(true);
   }
 
-  getEmmployees(){
-    return of(this.employees);
+  getAllEmmployees(){
+    return this.employees;
+  }
+
+  getPaginatedEmployes(inicio: number, fin: number){
+    const employess = this.getAllEmmployees().slice(inicio, fin);
+    return employess;
+  }
+
+  getEmployeesListResponse(size: number, currentPage: number): Observable<EmployeesResponse>{
+    const offset = (currentPage - 1 ) * size;
+    const limit = currentPage*size;
+    const paginatedEmployess = this.getPaginatedEmployes(offset, limit);
+    const numberOfEmployess = paginatedEmployess.length;
+
+    const resp: EmployeesResponse = {
+      content: paginatedEmployess,
+      pageable: {
+        sort: {
+          empty: false,
+          sorted: true,
+          unsorted: false,
+        },
+        offset: (currentPage - 1 ) * size,
+        pageNumber: currentPage,
+        pageSize: size,
+        paged: true,
+        unpaged: false,
+      },
+      totalPages: Math.ceil(this.getAllEmmployees().length / size),
+      totalElements: this.getAllEmmployees().length,
+      last: true,
+      number: 0,
+      sort: {
+        empty: false,
+        sorted: true,
+        unsorted: false,
+      },
+      size: size,
+      numberOfElements: numberOfEmployess,
+      first: true,
+      empty: false
+    }
+
+    return of(resp);
   }
 
 }

@@ -59,7 +59,6 @@ export class EmployeeFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.employeeService.getCatalogs().subscribe(catalogs => {
-      console.log(catalogs);
       this.catalogs = catalogs;
     })
   }

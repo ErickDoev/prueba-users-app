@@ -15,8 +15,6 @@ export class ErrorMsgComponent {
   errorMessage: string | undefined;
 
   @Input() set errors(value: any){
-    console.log(value);
-
     if (value.required) {
         this.errorMessage = `Este campo es obligatorio`;
       }

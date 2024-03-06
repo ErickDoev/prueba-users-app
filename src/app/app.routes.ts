@@ -5,7 +5,7 @@ import { EmployeeListComponent } from './features/employees/pages/employee-list/
 
 export const routes: Routes = [
     {
-      path: 'employee',
+      path: '',
       loadComponent: () => import('./features/employees/layout/employees-layout/employees-layout.component'),
       children: [
         {
@@ -20,6 +20,6 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'employee/add-employee'
+        redirectTo: 'add-employee'
     }
 ];

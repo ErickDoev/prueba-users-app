@@ -1,1 +1,38 @@
-<p>employee-list works!</p>,
+<div>
+  <app-title title="Listado de empleados"/>
+  <app-white-card>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Edad</th>
+          <th scope="col">Editar</th>
+          <th scope="col">Eliminar</th>
+          <th scope="col">Cambiar estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">
+            asdasdasd
+          </th>
+          <th>Erick</th>
+          <th>26</th>
+          <th>edit</th>
+          <th>delete</th>
+          <th>status</th>
+        </tr>
+      </tbody>
+    </table>
+  </app-white-card>
+</div>
+<mat-paginator
+  [length]="totalRecords"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 20]"
+  aria-label="Selecciona la pagina"
+  (page)="handlePageEvent($event)">
+</mat-paginator>
+
+<pre>{{employess|json}}</pre>

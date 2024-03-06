@@ -1,10 +1,14 @@
 <div class="sidebar">
   <div class="sidebar__list">
     <div class="sidebar__list-item">
-      Dashboard
+      <a [routerLink]="['/add-employee']" routerLinkActive="router-link-active" >
+        Agregar nuevo empleado
+      </a>
     </div>
     <div class="sidebar__list-item">
-      Users
+      <a [routerLink]="['/employee-list']" routerLinkActive="router-link-active" >
+        Listado de empleados
+      </a>
     </div>
   </div>
 </div>
