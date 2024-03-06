@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+.title-container{
+  margin-bottom: 12px;
+
+  & h1{
+    margin: 10px;
+  }
+
+  &__title{
+    font-size: xx-large;
+    font-weight: 600;
+  }
+}

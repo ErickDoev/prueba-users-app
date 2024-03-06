@@ -13,9 +13,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { employee } from '../../../../interfaces/employee.interface';
+import { Employee } from '../../../../interfaces/employee.interface';
 import { MatNativeDateModule } from '@angular/material/core';
 import { WhiteCardComponent } from '../../../../shared/white-card/white-card.component';
+import { ErrorMsgComponent } from '../../../../shared/error-msg/error-msg.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-employee-form',
@@ -29,7 +31,8 @@ import { WhiteCardComponent } from '../../../../shared/white-card/white-card.com
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    WhiteCardComponent
+    WhiteCardComponent,
+    ErrorMsgComponent
   ],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss',
@@ -48,7 +51,7 @@ export class EmployeeFormComponent implements OnInit {
       lastName: ['Cruz', [Validators.required]],
       secondlastName: ['Padilla', [Validators.required]],
       birthDay: ['', [Validators.required]],
-      age: [0, [Validators.required]],
+      age: [0, [Validators.required, Validators.min(1)]],
       charge: ['', [Validators.required]],
       isActive: [true, [Validators.required]]
     });
@@ -62,19 +65,31 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   onSubmit(){
-    console.log(this.form.value);
     const birthDay = this.form.get('birthDay')?.value;
 
     if(this.form.invalid) return;
-    const payload: employee = {
+    const payload: Employee = {
       nombre: this.getFullName(),
       fechaNacimiento: new Date(birthDay).getTime(),
       edad: this.form.get('age')?.value,
       idCargo: this.form.get('charge')?.value,
       estatus: this.form.get('isActive')?.value,
     }
-    console.log({ payload });
-
+    Swal.fire({
+      icon: "question",
+      title: "Desea registrar al empleado?",
+      confirmButtonText: 'Si, guardar',
+      showDenyButton: true,
+      denyButtonText: `Cancelar`
+    }).then((result) => {
+      if(result.isConfirmed){
+        this.employeeService.addEmployee(payload).subscribe(resp => {
+          if(resp){
+            this.openSuccessDialog();
+          }
+        });
+      }
+    })
   }
 
   getFullName(): string{
@@ -82,6 +97,26 @@ export class EmployeeFormComponent implements OnInit {
     const lastName = this.form.get('lastName')?.value;
     const secondLastName = this.form.get('secondlastName')?.value;
     return `${ name } ${ lastName } ${ secondLastName }`;
+  }
+
+  openSuccessDialog(){
+    Swal.fire({
+      icon: "success",
+      title: "El empleado ha sido registrado!",
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+    })
+    // .then(() => {
+    //   this.form.reset({
+    //     name: '',
+    //     lastName: '',
+    //     secondlastName: '',
+    //     birthDay: '',
+    //     age: 0,
+    //     charge: '',
+    //     isActive: ''
+    //   });
+    // });
   }
 
   // calculateAge(): number{

@@ -5,14 +5,23 @@
         <mat-form-field class="example-form-field" appearance="outline">
           <mat-label>Nombre(s)</mat-label>
           <input matInput formControlName="name" type="text">
+          @if (form.get('name')?.hasError('required')) {
+            <mat-error>El nombre es <strong>requerido</strong></mat-error>
+          }
         </mat-form-field>
         <mat-form-field class="example-form-field" appearance="outline">
           <mat-label>Apellido Paterno</mat-label>
           <input matInput formControlName="lastName" type="text">
+          @if (form.get('lastName')?.hasError('required')) {
+            <mat-error>El apellido paterno es <strong>requerido</strong></mat-error>
+          }
         </mat-form-field>
         <mat-form-field class="example-form-field" appearance="outline">
           <mat-label>Apellido Materno</mat-label>
           <input matInput formControlName="secondlastName" type="text">
+          @if (form.get('secondlastName')?.hasError('required')) {
+            <mat-error>El apellido materno es <strong>requerido</strong></mat-error>
+          }
         </mat-form-field>
       </div>
       <div class="row">
@@ -27,25 +36,44 @@
               <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
             </mat-datepicker-actions>
           </mat-datepicker>
+          @if (form.get('birthDay')?.hasError('required')) {
+            <mat-error>La fecha de nacimiento es <strong>requerida</strong></mat-error>
+          }
         </mat-form-field>
       <mat-form-field class="example-form-field" appearance="outline">
         <mat-label>Edad</mat-label>
-        <input matInput formControlName="age" type="number">
+        <input matInput formControlName="age" type="number" min="0">
+        @if (form.get('age')?.hasError('required')) {
+          <mat-error>La edad es <strong>requerida</strong></mat-error>
+        }
+        @if (form.get('age')?.hasError('min')) {
+          <mat-error>La edad minima requerida es de<strong> 1 años</strong></mat-error>
+        }
       </mat-form-field>
       <mat-form-field  appearance="outline">
         <mat-label>Cargo</mat-label>
         <mat-select formControlName="charge">
-          @for (catalog of catalogs; track $index) {
-              <mat-option [value]="catalog.id">{{ catalog.descripcion }}</mat-option>
-            }
+        @for (catalog of catalogs; track $index) {
+          <mat-option [value]="catalog.id">{{ catalog.descripcion }}</mat-option>
+        }
         </mat-select>
+        @if (form.get('charge')?.hasError('required')) {
+          <mat-error>El cargo es <strong>requerido</strong></mat-error>
+        }
       </mat-form-field>
       </div>
-      <mat-slide-toggle
-            class="example-margin"
-            formControlName="isActive">
-          Estatus
-      </mat-slide-toggle>
+      <div class="toogle-container">
+        <p>Estado</p>
+        <mat-slide-toggle
+          class="example-margin"
+          formControlName="isActive">
+          @if (form.get('isActive')?.value) {
+            Activo
+          } @else {
+            Inactivo
+          }
+        </mat-slide-toggle>
+      </div>
       <button type="submit" mat-button color="primary">Submit</button>
     </form>
   </div>
