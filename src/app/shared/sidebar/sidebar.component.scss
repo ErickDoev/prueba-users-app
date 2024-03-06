@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+.sidebar{
+  width: 150px;
+  height: 100%;
+  background-color: red;
+  &__list{
+    background-color: aqua;
+   &-item{
+    padding: 4px;
+    background-color: yellow;
+   }
+  }
+}

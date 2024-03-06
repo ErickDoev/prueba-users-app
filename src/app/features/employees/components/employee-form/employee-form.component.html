@@ -1,0 +1,53 @@
+<app-white-card>
+  <div class="">
+    <form [formGroup]="form" (submit)="onSubmit()">
+      <div class="row">
+        <mat-form-field class="example-form-field" appearance="outline">
+          <mat-label>Nombre(s)</mat-label>
+          <input matInput formControlName="name" type="text">
+        </mat-form-field>
+        <mat-form-field class="example-form-field" appearance="outline">
+          <mat-label>Apellido Paterno</mat-label>
+          <input matInput formControlName="lastName" type="text">
+        </mat-form-field>
+        <mat-form-field class="example-form-field" appearance="outline">
+          <mat-label>Apellido Materno</mat-label>
+          <input matInput formControlName="secondlastName" type="text">
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="example-form-field" appearance="outline">
+          <mat-label>Fecha de nacimiento</mat-label>
+          <input matInput [matDatepicker]="datepicker" formControlName="birthDay">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+          <mat-datepicker #datepicker>
+            <mat-datepicker-actions>
+              <button mat-button matDatepickerCancel>Cancel</button>
+              <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+            </mat-datepicker-actions>
+          </mat-datepicker>
+        </mat-form-field>
+      <mat-form-field class="example-form-field" appearance="outline">
+        <mat-label>Edad</mat-label>
+        <input matInput formControlName="age" type="number">
+      </mat-form-field>
+      <mat-form-field  appearance="outline">
+        <mat-label>Cargo</mat-label>
+        <mat-select formControlName="charge">
+          @for (catalog of catalogs; track $index) {
+              <mat-option [value]="catalog.id">{{ catalog.descripcion }}</mat-option>
+            }
+        </mat-select>
+      </mat-form-field>
+      </div>
+      <mat-slide-toggle
+            class="example-margin"
+            formControlName="isActive">
+          Estatus
+      </mat-slide-toggle>
+      <button type="submit" mat-button color="primary">Submit</button>
+    </form>
+  </div>
+
+</app-white-card>
