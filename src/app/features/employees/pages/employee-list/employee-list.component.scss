@@ -7,6 +7,16 @@ table{
   width: 100%;
 }
 
+.text-start{
+  text-align: start;
+}
+
 .list{
   padding: 40px;
+}
+
+.empty{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

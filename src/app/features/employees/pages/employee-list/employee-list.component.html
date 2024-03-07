@@ -1,6 +1,11 @@
 <div class="list">
   <app-title title="Listado de empleados"/>
   <app-white-card>
+    @if(employess.length<=0){
+      <div>
+        <p>No se encontraron registros</p>
+      </div>
+    }@else {
     <form [formGroup]="form">
       <table>
         <thead>
@@ -16,10 +21,10 @@
         <tbody formArrayName="employees">
           @for (emp of employeesArr.controls; track $index) {
             <tr [formGroupName]="$index">
-              <th scope="row">
+              <th class="text-start" scope="row">
                 {{ emp.get('id')?.value }}
               </th>
-              <th>
+              <th class="text-start">
                 @if (emp.get('isEdit')?.value && !emp.get('estatus')?.value) {
                   <input type="text" formControlName="nombre">
                 }@else {
@@ -58,6 +63,7 @@
         </tbody>
       </table>
     </form>
+    }
   </app-white-card>
 </div>
 <mat-paginator
