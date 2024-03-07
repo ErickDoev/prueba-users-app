@@ -1,14 +1,17 @@
 <div class="sidebar">
+  <p class="sidebar__title">Empleados</p>
   <div class="sidebar__list">
     <div class="sidebar__list-item">
-      <a [routerLink]="['/add-employee']" routerLinkActive="router-link-active" >
-        Agregar nuevo empleado
-      </a>
+      <div [routerLink]="['/add-employee']" routerLinkActive="active" class="route-container">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="person"></mat-icon>
+        Agregar empleado
+      </div>
     </div>
     <div class="sidebar__list-item">
-      <a [routerLink]="['/employee-list']" routerLinkActive="router-link-active" >
+      <div [routerLink]="['/employee-list']" routerLinkActive="active" class="route-container">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="list"></mat-icon>
         Listado de empleados
-      </a>
+      </div>
     </div>
   </div>
 </div>

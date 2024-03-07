@@ -3,15 +3,33 @@
 }
 
 .sidebar{
-  width: 200px;
+  width: 250px;
   height: 100%;
   background-color: rgb(76, 83, 87);
+  padding: 16px;
+
+  &__title{
+    color: white;
+    font-size: 30px;
+    margin: 40px 0px 70px 0px;
+  }
 
   &__list{
-    background-color: aqua;
    &-item{
     padding: 4px;
-    background-color: yellow;
+    cursor: pointer;
+    margin: 20px 0px;
+    color: white;
    }
   }
+}
+
+.active{
+  color: #00F393;
+}
+
+.route-container{
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
