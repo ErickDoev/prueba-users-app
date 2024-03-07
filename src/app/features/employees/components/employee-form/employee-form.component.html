@@ -27,7 +27,12 @@
       <div class="row">
         <mat-form-field class="example-form-field" appearance="outline">
           <mat-label>Fecha de nacimiento</mat-label>
-          <input matInput [matDatepicker]="datepicker" formControlName="birthDay">
+          <input
+            matInput
+            [max]="maxDate"
+            [matDatepicker]="datepicker"
+            (dateChange)="dateChange($event)"
+            formControlName="birthDay">
           <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
           <mat-datepicker #datepicker>
@@ -74,7 +79,9 @@
           }
         </mat-slide-toggle>
       </div>
-      <button type="submit" mat-button color="primary">Submit</button>
+      <div class="button-container">
+        <button type="submit" mat-raised-button color="primary">Guardar</button>
+      </div>
     </form>
   </div>
 

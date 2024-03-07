@@ -26,3 +26,12 @@ form{
     margin: 0 !important;
   }
 }
+
+.button-container{
+  display: flex;
+  justify-content: flex-end;
+
+  & button{
+    width: 100px;
+  }
+}

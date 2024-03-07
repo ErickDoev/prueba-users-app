@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { Employee } from '../../../../interfaces/employee.interface';
 import { MatNativeDateModule } from '@angular/material/core';
 import { WhiteCardComponent } from '../../../../shared/white-card/white-card.component';
@@ -44,12 +44,13 @@ export class EmployeeFormComponent implements OnInit {
 
   employeeService = inject(EmployeesService);
   catalogs: Catalog[] = [];
+  maxDate: Date = new Date();
 
   constructor(){
     this.form = this.fb.group({
-      name: ['Erick', [Validators.required]],
-      lastName: ['Cruz', [Validators.required]],
-      secondlastName: ['Padilla', [Validators.required]],
+      name: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      secondlastName: ['', [Validators.required]],
       birthDay: ['', [Validators.required]],
       age: [0, [Validators.required, Validators.min(1)]],
       charge: ['', [Validators.required]],
@@ -91,6 +92,19 @@ export class EmployeeFormComponent implements OnInit {
     })
   }
 
+  dateChange(event: MatDatepickerInputEvent<Date>){
+    const currentDay = new Date();
+    const age = this.calculateAge(event.value!, currentDay);
+    console.log(age);
+    this.form.patchValue({ age });
+  }
+
+  calculateAge(birthday: Date, currentDate: Date): number {
+    const diff = currentDate.getTime() - birthday.getTime();
+    const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+    return age;
+  }
+
   getFullName(): string{
     const name = this.form.get('name')?.value;
     const lastName = this.form.get('lastName')?.value;
@@ -105,21 +119,8 @@ export class EmployeeFormComponent implements OnInit {
       showConfirmButton: true,
       confirmButtonText: 'Aceptar',
     })
-    // .then(() => {
-    //   this.form.reset({
-    //     name: '',
-    //     lastName: '',
-    //     secondlastName: '',
-    //     birthDay: '',
-    //     age: 0,
-    //     charge: '',
-    //     isActive: ''
-    //   });
-    // });
+    .then(() => {
+      this.form.reset();
+    });
   }
-
-  // calculateAge(): number{
-
-  // }
-
 }
