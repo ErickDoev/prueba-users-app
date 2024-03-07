@@ -1,10 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { EmployeesService } from '../../../../services/employees.service';
 import { TitleComponent } from '../../../../shared/title/title.component';
 import { WhiteCardComponent } from '../../../../shared/white-card/white-card.component';
 import { Employee } from '../../../../interfaces/employee.interface';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-employee-list',
   standalone: true,
@@ -12,13 +17,20 @@ import { Employee } from '../../../../interfaces/employee.interface';
     CommonModule,
     TitleComponent,
     WhiteCardComponent,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTableModule,
+    MatSlideToggleModule,
+    ReactiveFormsModule,
+    MatButtonModule
   ],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmployeeListComponent implements OnInit {
+export class EmployeeListComponent {
+  private fb = inject(FormBuilder);
+  form!: FormGroup;
+
   private readonly employeeService = inject(EmployeesService);
   employess: Employee[] = [];
 
@@ -28,21 +40,98 @@ export class EmployeeListComponent implements OnInit {
   totalRecords: number = 0;
   totalPages: number = 0;
 
-  ngOnInit(): void {
-    this.getEmployeeList(this.pageSize, this.currentPage);
+  displayedColumns: string[] = ['id', 'nombre', 'edad' , 'actions'];
+
+  constructor(){
+    this.getEmployeesListResponse(this.pageSize, this.currentPage);
+    this.initForm();
+  }
+
+  initForm(){
+    this.form = this.fb.group({
+      employees: this.fb.array(this.employess.map(emp => this.createEmployeesGroup(emp)))
+    });
+  }
+
+  createEmployeesGroup(emp: Employee): FormGroup{
+    return this.fb.group({
+      nombre: [emp.nombre],
+      edad: [emp.edad],
+      estatus: [emp.estatus],
+      isEdit: [false],
+      id: [emp.id]
+    });
+  }
+
+  get employeesArr(){
+    return this.form.get('employees') as FormArray;
   }
 
   handlePageEvent(event: PageEvent){
     this.currentPage = event.pageIndex + 1;
     this.pageSize = event.pageSize;
-    this.getEmployeeList(this.pageSize, this.currentPage);
+    this.getEmployeesListResponse(this.pageSize, this.currentPage);
   }
 
-  getEmployeeList(pageSize: number, currentPage: number){
+  getEmployeesListResponse(pageSize: number, currentPage: number){
     this.employeeService.getEmployeesListResponse(pageSize, currentPage).subscribe(emps => {
       this.employess = emps.content;
+      this.initForm();
       this.totalRecords = emps.totalElements;
       this.totalPages = emps.totalPages;
     });
+  }
+
+  onEdit(row: any){
+    console.log(row);
+  }
+
+  onDelete(row: any){
+    console.log(row);
+  }
+
+  onEditField(index: number){
+    const controls = this.employeesArr.controls[index];
+    controls.get('isEdit')?.patchValue(true);
+  }
+
+  editEmployee(emp: any){
+    // emp.get('isEdit').patchValue(false)
+    const employee = emp.value;
+    const payload = {
+      nombre: employee.nombre,
+      edad: Number(employee.edad),
+      estatus: employee.estatus,
+      id: employee.id
+    }
+
+    Swal.fire({
+      icon: "question",
+      title: "Desea registrar al empleado?",
+      confirmButtonText: 'Si, guardar',
+      showDenyButton: true,
+      denyButtonText: `Cancelar`
+    }).then((result) => {
+      if(result.isConfirmed){
+        emp.get('isEdit').patchValue(false)
+        this.employeeService.updateEmployee(payload).subscribe(resp => {
+          if(resp){
+            console.log('sup ');
+            this.openSuccessDialog();
+
+          }
+        });
+      }
+    })
+
+  }
+
+  openSuccessDialog(){
+    Swal.fire({
+      icon: "success",
+      title: "El empleado ha sido actualizado!",
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+    })
   }
 }

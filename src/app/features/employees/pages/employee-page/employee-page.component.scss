@@ -1,7 +1,12 @@
 :host {
   display: block;
+  flex: 1;
 }
 
+.form{
+  display: flex;
+  align-items: center;
+}
 .employee-page{
   padding: 16px;
 }

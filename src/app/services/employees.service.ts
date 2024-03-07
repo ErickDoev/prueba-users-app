@@ -47,6 +47,22 @@ export class EmployeesService {
     return of(true);
   }
 
+  updateEmployee(employee: any){
+    const newEmps = this.employees.map((emp) => {
+      if(emp.id === employee.id){
+        return {
+          ...emp,
+          ...employee
+        }
+      } else {
+        return emp;
+      }
+    });
+    this.employees = newEmps;
+    localStorage.setItem('employess', JSON.stringify(this.getAllEmmployees()));
+    return of(newEmps);
+  }
+
   getAllEmmployees(){
     return this.employees;
   }

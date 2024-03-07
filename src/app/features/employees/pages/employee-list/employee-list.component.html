@@ -1,30 +1,63 @@
-<div>
+<div class="list">
   <app-title title="Listado de empleados"/>
   <app-white-card>
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">id</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Edad</th>
-          <th scope="col">Editar</th>
-          <th scope="col">Eliminar</th>
-          <th scope="col">Cambiar estatus</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">
-            asdasdasd
-          </th>
-          <th>Erick</th>
-          <th>26</th>
-          <th>edit</th>
-          <th>delete</th>
-          <th>status</th>
-        </tr>
-      </tbody>
-    </table>
+    <form [formGroup]="form">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Edad</th>
+            <th scope="col">Editar</th>
+            <th scope="col">Eliminar</th>
+            <th scope="col">Cambiar estatus</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="employees">
+          @for (emp of employeesArr.controls; track $index) {
+            <tr [formGroupName]="$index">
+              <th scope="row">
+                {{ emp.get('id')?.value }}
+              </th>
+              <th>
+                @if (emp.get('isEdit')?.value && !emp.get('estatus')?.value) {
+                  <input type="text" formControlName="nombre">
+                }@else {
+                  {{ emp.get('nombre')?.value }}
+                }
+              </th>
+              <th>
+                 @if (emp.get('isEdit')?.value && !emp.get('estatus')?.value) {
+                   <input type="text" formControlName="edad">
+                }@else {
+                  {{ emp.get('edad')?.value }}
+                }
+              </th>
+              <th>
+                @if (emp.get('isEdit')?.value && !emp.get('estatus')?.value) {
+                  <button
+                    [disabled]="emp.get('estatus')?.value"
+                    mat-raised-button color="primary"
+                    (click)="editEmployee(emp)">Actualizar</button>
+                }@else {
+                  <button
+                    [disabled]="emp.get('estatus')?.value"
+                    mat-raised-button color="primary"
+                    (click)="onEditField($index)">Editar</button>
+                }
+              </th>
+              <th>
+                <button mat-raised-button color="warn">Borrar</button>
+              </th>
+              <th>
+                <mat-slide-toggle formControlName="estatus">
+                </mat-slide-toggle>
+              </th>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </form>
   </app-white-card>
 </div>
 <mat-paginator
@@ -35,4 +68,4 @@
   (page)="handlePageEvent($event)">
 </mat-paginator>
 
-<pre>{{employess|json}}</pre>
+<!-- <pre>{{form.value|json}}</pre> -->
