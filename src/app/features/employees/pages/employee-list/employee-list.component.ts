@@ -7,9 +7,10 @@ import { EmployeesService } from '../../../../services/employees.service';
 import { TitleComponent } from '../../../../shared/title/title.component';
 import { WhiteCardComponent } from '../../../../shared/white-card/white-card.component';
 import { Employee } from '../../../../interfaces/employee.interface';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import Swal from 'sweetalert2';
+import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-employee-list',
   standalone: true,
@@ -21,15 +22,18 @@ import Swal from 'sweetalert2';
     MatTableModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatInputModule
   ],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeListComponent {
+
   private fb = inject(FormBuilder);
   form!: FormGroup;
+  searchTerm!: FormControl;
 
   private readonly employeeService = inject(EmployeesService);
   employess: Employee[] = [];
@@ -45,6 +49,7 @@ export class EmployeeListComponent {
   constructor(){
     this.getEmployeesListResponse(this.pageSize, this.currentPage);
     this.initForm();
+    // this.searchTerm = this.fb.control('');
   }
 
   initForm(){
@@ -82,12 +87,14 @@ export class EmployeeListComponent {
     });
   }
 
-  onEdit(row: any){
-    console.log(row);
-  }
-
-  onDelete(row: any){
-    console.log(row);
+  onDeleteField(index: any){
+    const control = this.employeesArr.controls[index];
+    console.log(control.value.id);
+    this.employeeService.deleteEmployee(control.value.id).subscribe(res => {
+      console.log(res);
+      this.employess = res;
+      this.initForm();
+    })
   }
 
   onEditField(index: number){
@@ -96,7 +103,6 @@ export class EmployeeListComponent {
   }
 
   editEmployee(emp: any){
-    // emp.get('isEdit').patchValue(false)
     const employee = emp.value;
     const payload = {
       nombre: employee.nombre,

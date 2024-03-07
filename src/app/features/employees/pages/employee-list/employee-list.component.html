@@ -1,6 +1,10 @@
 <div class="list">
   <app-title title="Listado de empleados"/>
   <app-white-card>
+    <!-- <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>Favorite food</mat-label>
+      <input matInput placeholder="Buscar...">
+    </mat-form-field> -->
     @if(employess.length<=0){
       <div>
         <p>No se encontraron registros</p>
@@ -52,7 +56,7 @@
                 }
               </th>
               <th>
-                <button mat-raised-button color="warn">Borrar</button>
+                <button mat-raised-button color="warn" (click)="onDeleteField($index)">Borrar</button>
               </th>
               <th>
                 <mat-slide-toggle formControlName="estatus">

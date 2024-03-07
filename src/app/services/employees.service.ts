@@ -47,6 +47,13 @@ export class EmployeesService {
     return of(true);
   }
 
+  deleteEmployee(id: string): Observable<Employee[]>{
+    const newEmps = this.employees.filter(emp => emp.id !== id);
+    this.employees = newEmps;
+    localStorage.setItem('employess', JSON.stringify(this.getAllEmmployees()));
+    return of(newEmps);
+  }
+
   updateEmployee(employee: any){
     const newEmps = this.employees.map((emp) => {
       if(emp.id === employee.id){
